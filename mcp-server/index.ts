@@ -73,6 +73,82 @@ export default function Page() {
 }`,
   },
 
+  GlassNavAnimated: {
+    name: "GlassNavAnimated",
+    description:
+      "GlassNav variant with a sliding frosted indicator that follows the hovered item. Uses Framer Motion layoutId for smooth position interpolation. Requires framer-motion.",
+    props: [
+      { name: "links", type: "{ label: string; href: string }[]", required: true, description: "Navigation links to render" },
+    ],
+    source: `import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+export default function GlassNavAnimated({ links }: { links: NavLink[] }) {
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  return (
+    <nav
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-xl border"
+      style={{
+        backdropFilter: "blur(9px)",
+        WebkitBackdropFilter: "blur(9px)",
+        background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
+        borderColor: "rgba(255,255,255,0.2)",
+        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
+      }}
+      onMouseLeave={() => setHovered(null)}
+    >
+      <div className="flex items-center gap-1 px-2 py-1.5">
+        {links.map((link) => (
+          <a
+            key={link.href}
+            href={link.href}
+            className="relative px-3 py-1.5 text-white font-medium text-[15px] transition-opacity no-underline"
+            onMouseEnter={() => setHovered(link.href)}
+          >
+            <AnimatePresence>
+              {hovered === link.href && (
+                <motion.div
+                  layoutId="glass-nav-indicator"
+                  layout
+                  className="absolute inset-0 rounded-lg"
+                  style={{ background: "rgba(255,255,255,0.15)" }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                />
+              )}
+            </AnimatePresence>
+            <span className="relative z-10">{link.label}</span>
+          </a>
+        ))}
+      </div>
+    </nav>
+  );
+}`,
+    usage: `// npm install framer-motion
+import GlassNavAnimated from './components/GlassNavAnimated'
+
+const links = [
+  { label: "About", href: "/about" },
+  { label: "Journal", href: "/journal" },
+]
+
+export default function Page() {
+  return (
+    <main>
+      <GlassNavAnimated links={links} />
+    </main>
+  )
+}`,
+  },
+
   GlassCard: {
     name: "GlassCard",
     description:
@@ -195,7 +271,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           name: {
             type: "string",
             enum: Object.keys(COMPONENTS),
-            description: "Component name (GlassNav or GlassCard)",
+            description: "Component name (GlassNav, GlassNavAnimated, or GlassCard)",
           },
         },
         required: ["name"],
@@ -225,7 +301,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "get_component") {
-    const parsed = z.object({ name: z.enum(["GlassNav", "GlassCard"]) }).parse(args);
+    const parsed = z.object({ name: z.enum(["GlassNav", "GlassNavAnimated", "GlassCard"]) }).parse(args);
     const component = COMPONENTS[parsed.name as ComponentName];
     const text = [
       `# ${component.name}`,
