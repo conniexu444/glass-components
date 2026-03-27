@@ -221,41 +221,39 @@ export default function App() {
           <ShowcaseCard
             title="GlassNav"
             description="Floating frosted-glass navigation bar. Fixed to the top center of the viewport."
-            code={GLASS_NAV_CODE}
-            preview={
-              <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                <nav
-                  style={{
-                    position: "absolute",
-                    top: "24px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    backdropFilter: "blur(9px)",
-                    WebkitBackdropFilter: "blur(9px)",
-                    background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
-                    borderRadius: "12px",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <div style={{ display: "flex", gap: "24px", padding: "8px 12px", alignItems: "center" }}>
-                    {["About", "Journal", "Miscellaneous", "Food Reviews"].map((l) => (
-                      <span key={l} style={{ color: "#fff", fontSize: "15px", fontWeight: 500 }}>{l}</span>
-                    ))}
+            variants={[
+              {
+                label: "Default",
+                code: GLASS_NAV_CODE,
+                preview: (
+                  <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                    <nav
+                      style={{
+                        position: "absolute",
+                        top: "24px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        backdropFilter: "blur(9px)",
+                        WebkitBackdropFilter: "blur(9px)",
+                        background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
+                        borderRadius: "12px",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <div style={{ display: "flex", gap: "24px", padding: "8px 12px", alignItems: "center" }}>
+                        {["About", "Journal", "Miscellaneous", "Food Reviews"].map((l) => (
+                          <span key={l} style={{ color: "#fff", fontSize: "15px", fontWeight: 500 }}>{l}</span>
+                        ))}
+                      </div>
+                    </nav>
                   </div>
-                </nav>
-              </div>
-            }
-          />
-        </div>
-
-        {/* GlassNavAnimated */}
-        <div id="glassnavanimated">
-          <ShowcaseCard
-            title="GlassNavAnimated"
-            description="GlassNav variant with a sliding frosted indicator that follows the hovered item. Uses Framer Motion layoutId."
-            code={`import { useState } from "react";
+                ),
+              },
+              {
+                label: "Animated",
+                code: `import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavLink {
@@ -306,8 +304,10 @@ export default function GlassNavAnimated({ links }: { links: NavLink[] }) {
       </div>
     </nav>
   );
-}`}
-            preview={<GlassNavAnimatedPreview />}
+}`,
+                preview: <GlassNavAnimatedPreview />,
+              },
+            ]}
           />
         </div>
 
