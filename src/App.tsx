@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import './index.css'
 import GlassNav from './components/GlassNav'
 import ShowcaseCard from './components/ShowcaseCard'
@@ -119,6 +121,51 @@ export default function Page() {
   )
 }`;
 
+// Inline preview for GlassNavAnimated (can't use fixed positioning inside a showcase box)
+function GlassNavAnimatedPreview() {
+  const [hovered, setHovered] = useState<string | null>(null);
+  const links = ["About", "Journal", "Miscellaneous", "Food Reviews"];
+  return (
+    <div
+      className="rounded-xl border flex items-center"
+      style={{
+        backdropFilter: "blur(9px)",
+        WebkitBackdropFilter: "blur(9px)",
+        background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
+        borderColor: "rgba(255,255,255,0.2)",
+        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
+      }}
+      onMouseLeave={() => setHovered(null)}
+    >
+      <div className="flex items-center gap-1 px-2 py-1.5">
+        {links.map((label) => (
+          <div
+            key={label}
+            className="relative px-3 py-1.5 text-white font-medium text-[15px] cursor-pointer"
+            onMouseEnter={() => setHovered(label)}
+          >
+            <AnimatePresence>
+              {hovered === label && (
+                <motion.div
+                  layoutId="glass-nav-preview-indicator"
+                  layout
+                  className="absolute inset-0 rounded-lg"
+                  style={{ background: "rgba(255,255,255,0.15)" }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                />
+              )}
+            </AnimatePresence>
+            <span className="relative z-10">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const navLinks = [
   { label: "GlassNav", href: "#glassnav" },
   { label: "GlassCard", href: "#glasscard" },
@@ -174,32 +221,93 @@ export default function App() {
           <ShowcaseCard
             title="GlassNav"
             description="Floating frosted-glass navigation bar. Fixed to the top center of the viewport."
-            code={GLASS_NAV_CODE}
-            preview={
-              <div style={{ position: "relative", width: "100%", height: "100%" }}>
-                <nav
-                  style={{
-                    position: "absolute",
-                    top: "24px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    backdropFilter: "blur(9px)",
-                    WebkitBackdropFilter: "blur(9px)",
-                    background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
-                    borderRadius: "12px",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <div style={{ display: "flex", gap: "24px", padding: "8px 12px", alignItems: "center" }}>
-                    {["About", "Journal", "Miscellaneous", "Food Reviews"].map((l) => (
-                      <span key={l} style={{ color: "#fff", fontSize: "15px", fontWeight: 500 }}>{l}</span>
-                    ))}
+            variants={[
+              {
+                label: "Default",
+                code: GLASS_NAV_CODE,
+                preview: (
+                  <div style={{ position: "relative", width: "100%", height: "100%" }}>
+                    <nav
+                      style={{
+                        position: "absolute",
+                        top: "24px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        backdropFilter: "blur(9px)",
+                        WebkitBackdropFilter: "blur(9px)",
+                        background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
+                        borderRadius: "12px",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <div style={{ display: "flex", gap: "24px", padding: "8px 12px", alignItems: "center" }}>
+                        {["About", "Journal", "Miscellaneous", "Food Reviews"].map((l) => (
+                          <span key={l} style={{ color: "#fff", fontSize: "15px", fontWeight: 500 }}>{l}</span>
+                        ))}
+                      </div>
+                    </nav>
                   </div>
-                </nav>
-              </div>
-            }
+                ),
+              },
+              {
+                label: "Animated",
+                code: `import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+export default function GlassNavAnimated({ links }: { links: NavLink[] }) {
+  const [hovered, setHovered] = useState<string | null>(null);
+
+  return (
+    <nav
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-xl border"
+      style={{
+        backdropFilter: "blur(9px)",
+        WebkitBackdropFilter: "blur(9px)",
+        background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
+        borderColor: "rgba(255,255,255,0.2)",
+        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
+      }}
+      onMouseLeave={() => setHovered(null)}
+    >
+      <div className="flex items-center gap-1 px-2 py-1.5">
+        {links.map((link) => (
+          <a
+            key={link.href}
+            href={link.href}
+            className="relative px-3 py-1.5 text-white font-medium text-[15px] transition-opacity no-underline"
+            onMouseEnter={() => setHovered(link.href)}
+          >
+            <AnimatePresence>
+              {hovered === link.href && (
+                <motion.div
+                  layoutId="glass-nav-indicator"
+                  layout
+                  className="absolute inset-0 rounded-lg"
+                  style={{ background: "rgba(255,255,255,0.15)" }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                />
+              )}
+            </AnimatePresence>
+            <span className="relative z-10">{link.label}</span>
+          </a>
+        ))}
+      </div>
+    </nav>
+  );
+}`,
+                preview: <GlassNavAnimatedPreview />,
+              },
+            ]}
           />
         </div>
 
