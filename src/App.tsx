@@ -4,88 +4,9 @@ import './index.css'
 import GlassNav from './components/GlassNav'
 import ShowcaseCard from './components/ShowcaseCard'
 import CodeBlock from './components/CodeBlock'
-
-const GLASS_NAV_CODE = `import { useRef } from "react";
-
-interface NavLink {
-  label: string;
-  href: string;
-}
-
-export default function GlassNav({ links }: { links: NavLink[] }) {
-  return (
-    <nav
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-xl border"
-      style={{
-        backdropFilter: "blur(9px)",
-        WebkitBackdropFilter: "blur(9px)",
-        background:
-          "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
-        borderColor: "rgba(255,255,255,0.2)",
-        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
-      }}
-    >
-      <div className="flex items-center gap-6 px-3 py-2">
-        {links.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            className="text-white font-medium text-[15px] hover:opacity-70 transition-opacity no-underline"
-          >
-            {link.label}
-          </a>
-        ))}
-      </div>
-    </nav>
-  );
-}`;
-
-const GLASS_CARD_CODE = `import { useEffect, useRef, useState, type ReactNode } from "react";
-
-interface GlassCardProps {
-  children: ReactNode;
-  cardHeight?: number;
-  bottomOffset?: number;
-}
-
-export default function GlassCard({
-  children,
-  cardHeight = 160,
-  bottomOffset = 32,
-}: GlassCardProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [isFixed, setIsFixed] = useState(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return;
-      const sectionBottom = sectionRef.current.getBoundingClientRect().bottom;
-      setIsFixed(sectionBottom > cardHeight + bottomOffset);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [cardHeight, bottomOffset]);
-
-  return (
-    <div ref={sectionRef} className="relative">
-      <div
-        className="max-w-sm rounded-2xl border border-white/20 p-8 z-40"
-        style={{
-          position: isFixed ? "fixed" : "absolute",
-          bottom: \`\${bottomOffset}px\`,
-          left: "2rem",
-          backdropFilter: "blur(15px)",
-          WebkitBackdropFilter: "blur(15px)",
-          background:
-            "linear-gradient(to right, rgba(0,0,0,0.12), rgba(0,0,0,0.07))",
-          boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}`;
+import glassNavSource from './components/GlassNav.tsx?raw'
+import glassNavAnimatedSource from './components/GlassNavAnimated.tsx?raw'
+import glassCardSource from './components/GlassCard.tsx?raw'
 
 const USAGE_CODE = `// Install TailwindCSS v4 first:
 // npm install -D tailwindcss @tailwindcss/vite
@@ -224,7 +145,7 @@ export default function App() {
             variants={[
               {
                 label: "Default",
-                code: GLASS_NAV_CODE,
+                code: glassNavSource,
                 preview: (
                   <div style={{ position: "relative", width: "100%", height: "100%" }}>
                     <nav
@@ -253,58 +174,7 @@ export default function App() {
               },
               {
                 label: "Animated",
-                code: `import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
-interface NavLink {
-  label: string;
-  href: string;
-}
-
-export default function GlassNavAnimated({ links }: { links: NavLink[] }) {
-  const [hovered, setHovered] = useState<string | null>(null);
-
-  return (
-    <nav
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-xl border"
-      style={{
-        backdropFilter: "blur(9px)",
-        WebkitBackdropFilter: "blur(9px)",
-        background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
-        borderColor: "rgba(255,255,255,0.2)",
-        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
-      }}
-      onMouseLeave={() => setHovered(null)}
-    >
-      <div className="flex items-center gap-1 px-2 py-1.5">
-        {links.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            className="relative px-3 py-1.5 text-white font-medium text-[15px] transition-opacity no-underline"
-            onMouseEnter={() => setHovered(link.href)}
-          >
-            <AnimatePresence>
-              {hovered === link.href && (
-                <motion.div
-                  layoutId="glass-nav-indicator"
-                  layout
-                  className="absolute inset-0 rounded-lg"
-                  style={{ background: "rgba(255,255,255,0.15)" }}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: "easeInOut" }}
-                />
-              )}
-            </AnimatePresence>
-            <span className="relative z-10">{link.label}</span>
-          </a>
-        ))}
-      </div>
-    </nav>
-  );
-}`,
+                code: glassNavAnimatedSource,
                 preview: <GlassNavAnimatedPreview />,
               },
             ]}
@@ -316,7 +186,7 @@ export default function GlassNavAnimated({ links }: { links: NavLink[] }) {
           <ShowcaseCard
             title="GlassCard"
             description="Sticky frosted-glass card pinned to the bottom-left. Scrolls away when the section ends."
-            code={GLASS_CARD_CODE}
+            code={glassCardSource}
             preview={
               <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "flex-end", justifyContent: "flex-start", padding: "24px" }}>
                 <div
