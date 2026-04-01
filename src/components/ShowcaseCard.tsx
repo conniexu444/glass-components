@@ -78,7 +78,7 @@ export default function ShowcaseCard({ title, description, preview, code, varian
             className="rounded-xl flex items-center justify-center overflow-hidden"
             style={{
               minHeight: "220px",
-              backgroundImage: "url('/glass-components/background-image.png')",
+              backgroundImage: `url('${import.meta.env.BASE_URL}background-image.png')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               position: "relative",
