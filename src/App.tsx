@@ -6,6 +6,7 @@ import ShowcaseCard from './components/ShowcaseCard'
 import CodeBlock from './components/CodeBlock'
 import glassNavSource from './components/GlassNav.tsx?raw'
 import glassNavAnimatedSource from './components/GlassNavAnimated.tsx?raw'
+import glassNavActiveTabSource from './components/GlassNavActiveTab.tsx?raw'
 import glassCardSource from './components/GlassCard.tsx?raw'
 
 const USAGE_CODE = `// Install TailwindCSS v4 first:
@@ -76,6 +77,58 @@ function GlassNavAnimatedPreview() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
+                />
+              )}
+            </AnimatePresence>
+            <span className="relative z-10">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GlassNavActiveTabPreview() {
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [active, setActive] = useState<string | null>("About");
+  const links = ["About", "Journal", "Miscellaneous", "Food Reviews"];
+  const indicatorOn = hovered ?? active;
+  return (
+    <div
+      className="rounded-xl border flex items-center"
+      style={{
+        backdropFilter: "blur(9px)",
+        WebkitBackdropFilter: "blur(9px)",
+        background: "linear-gradient(to right, rgba(249,250,247,0.12), rgba(249,250,247,0.18))",
+        borderColor: "rgba(255,255,255,0.2)",
+        boxShadow: "rgba(0,0,0,0.15) 0px 2px 6px 0px",
+      }}
+      onMouseLeave={() => setHovered(null)}
+    >
+      <div className="flex items-center gap-1 px-2 py-1.5">
+        {links.map((label) => (
+          <div
+            key={label}
+            className="relative px-3 py-1.5 text-white font-medium text-[15px] cursor-pointer"
+            onMouseEnter={() => setHovered(label)}
+            onClick={() => setActive(label)}
+          >
+            <AnimatePresence>
+              {indicatorOn === label && (
+                <motion.div
+                  layoutId="glass-nav-active-tab-preview-indicator"
+                  layout
+                  className="absolute inset-0 rounded-lg"
+                  style={{
+                    background:
+                      active === label && hovered === null
+                        ? "rgba(255,255,255,0.22)"
+                        : "rgba(255,255,255,0.15)",
+                  }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
                 />
               )}
             </AnimatePresence>
@@ -177,6 +230,11 @@ export default function App() {
                 code: glassNavAnimatedSource,
                 preview: <GlassNavAnimatedPreview />,
               },
+              {
+                label: "Active Tab",
+                code: glassNavActiveTabSource,
+                preview: <GlassNavActiveTabPreview />,
+              },
             ]}
           />
         </div>
@@ -202,10 +260,10 @@ export default function App() {
                   }}
                 >
                   <p style={{ color: "#fff", fontSize: "17px", fontWeight: 500, margin: "0 0 8px" }}>
-                    Software engineer based in New York.
+                    Lorem ipsum dolor sit amet.
                   </p>
                   <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", margin: 0 }}>
-                    I like building things, writing, and exploring the city.
+                    Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
                   </p>
                 </div>
               </div>
