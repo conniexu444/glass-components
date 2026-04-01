@@ -78,7 +78,9 @@ export default function ShowcaseCard({ title, description, preview, code, varian
             className="rounded-xl flex items-center justify-center overflow-hidden"
             style={{
               minHeight: "220px",
-              background: "linear-gradient(135deg, #1a2a4a 0%, #2d1b4e 50%, #1a3a2a 100%)",
+              backgroundImage: "url('/glass-components/background-image.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
               position: "relative",
             }}
           >
