@@ -4,8 +4,13 @@ Small React + TailwindCSS frosted-glass UI primitives, plus a CLI for printing c
 
 ## Available Components Preview
 
+### The Glass Navigation Bar (2 Variations)
+
 ![GlassNav preview](public/glass-nav-bar.gif)
-Glass Navigation Bar
+
+The Glass Navigation bar is inspired by Vercel's. On noisy backgrounds, any element under the glass navigation bar becomes blurred, helping with user readability.
+
+Future variations will include: vertical navigation bar, active tab indicators, and light/dark mode
 
 ## CLI
 
