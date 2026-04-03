@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 interface NavLink {
   label: string;
@@ -12,9 +11,36 @@ interface GlassNavAnimatedProps {
 
 export default function GlassNavAnimated({ links }: GlassNavAnimatedProps) {
   const [hovered, setHovered] = useState<string | null>(null);
+  const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const navRef = useRef<HTMLDivElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState<React.CSSProperties>({ opacity: 0 });
+
+  const updateIndicator = useCallback(() => {
+    if (!hovered || !navRef.current) {
+      setIndicatorStyle((prev) => ({ ...prev, opacity: 0 }));
+      return;
+    }
+    const el = linkRefs.current.get(hovered);
+    if (!el || !navRef.current) return;
+    const navRect = navRef.current.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    setIndicatorStyle({
+      left: elRect.left - navRect.left,
+      top: elRect.top - navRect.top,
+      width: elRect.width,
+      height: elRect.height,
+      opacity: 1,
+      background: "rgba(255,255,255,0.15)",
+    });
+  }, [hovered]);
+
+  useEffect(() => {
+    updateIndicator();
+  }, [updateIndicator]);
 
   return (
     <nav
+      ref={navRef}
       className="fixed top-6 left-1/2 -translate-x-1/2 z-50 rounded-xl border"
       style={{
         backdropFilter: "blur(9px)",
@@ -25,28 +51,27 @@ export default function GlassNavAnimated({ links }: GlassNavAnimatedProps) {
       }}
       onMouseLeave={() => setHovered(null)}
     >
-      <div className="flex items-center gap-1 px-2 py-1.5">
+      {/* Single indicator that slides via CSS transition */}
+      <div
+        className="absolute rounded-lg pointer-events-none"
+        style={{
+          ...indicatorStyle,
+          transition: "left 0.45s ease, width 0.45s ease, opacity 0.15s ease",
+        }}
+      />
+
+      <div className="relative flex items-center gap-1 px-2 py-1.5">
         {links.map((link) => (
           <a
             key={link.href}
             href={link.href}
-            className="relative px-3 py-1.5 text-white font-medium text-[15px] transition-opacity no-underline"
+            ref={(el) => {
+              if (el) linkRefs.current.set(link.href, el);
+            }}
+            className="relative px-3 py-1.5 text-white font-medium text-[15px] no-underline"
             onMouseEnter={() => setHovered(link.href)}
           >
-            <AnimatePresence initial={false}>
-              {hovered === link.href && (
-                <motion.div
-                  layoutId="glass-nav-indicator"
-                  className="absolute inset-0 rounded-lg"
-                  style={{ background: "rgba(255,255,255,0.15)" }}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: "easeInOut" }}
-                />
-              )}
-            </AnimatePresence>
-            <span className="relative z-10">{link.label}</span>
+            {link.label}
           </a>
         ))}
       </div>
