@@ -33,11 +33,10 @@ export default function GlassNavAnimated({ links }: GlassNavAnimatedProps) {
             className="relative px-3 py-1.5 text-white font-medium text-[15px] transition-opacity no-underline"
             onMouseEnter={() => setHovered(link.href)}
           >
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
               {hovered === link.href && (
                 <motion.div
                   layoutId="glass-nav-indicator"
-                  layout
                   className="absolute inset-0 rounded-lg"
                   style={{ background: "rgba(255,255,255,0.15)" }}
                   initial={{ opacity: 0, scale: 0.95 }}

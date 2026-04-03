@@ -66,11 +66,10 @@ function GlassNavAnimatedPreview() {
             className="relative px-3 py-1.5 text-white font-medium text-[15px] cursor-pointer"
             onMouseEnter={() => setHovered(label)}
           >
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
               {hovered === label && (
                 <motion.div
                   layoutId="glass-nav-preview-indicator"
-                  layout
                   className="absolute inset-0 rounded-lg"
                   style={{ background: "rgba(255,255,255,0.15)" }}
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -113,11 +112,10 @@ function GlassNavActiveTabPreview() {
             onMouseEnter={() => setHovered(label)}
             onClick={() => setActive(label)}
           >
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
               {indicatorOn === label && (
                 <motion.div
                   layoutId="glass-nav-active-tab-preview-indicator"
-                  layout
                   className="absolute inset-0 rounded-lg"
                   style={{
                     background:
