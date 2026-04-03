@@ -38,11 +38,10 @@ export default function GlassNavActiveTab({ links, defaultActive }: GlassNavActi
             onMouseEnter={() => setHovered(link.href)}
             onClick={() => setActive(link.href)}
           >
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
               {indicatorOn === link.href && (
                 <motion.div
                   layoutId="glass-nav-active-indicator"
-                  layout
                   className="absolute inset-0 rounded-lg"
                   style={{
                     background:
