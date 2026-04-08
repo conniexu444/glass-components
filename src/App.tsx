@@ -10,6 +10,8 @@ import glassNavActiveTabSource from './components/GlassNavActiveTab.tsx?raw'
 import glassCardSource from './components/GlassCard.tsx?raw'
 import GlassMuteButton from './components/GlassMuteButton'
 import glassMuteButtonSource from './components/GlassMuteButton.tsx?raw'
+import GlassInfoButton from './components/GlassInfoButton'
+import glassInfoButtonSource from './components/GlassInfoButton.tsx?raw'
 
 const USAGE_CODE = `// Install TailwindCSS v4 first:
 // npm install -D tailwindcss @tailwindcss/vite
@@ -249,6 +251,20 @@ export default function App() {
               <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: "16px" }}>
                 <GlassMuteButton />
                 <GlassMuteButton defaultMuted />
+              </div>
+            }
+          />
+        </div>
+
+        {/* GlassInfoButton */}
+        <div id="glassinfobutton">
+          <ShowcaseCard
+            title="GlassInfoButton"
+            description="Frosted-glass icon button for surfacing information."
+            code={glassInfoButtonSource}
+            preview={
+              <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <GlassInfoButton />
               </div>
             }
           />
