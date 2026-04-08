@@ -142,6 +142,7 @@ function GlassNavActiveTabPreview() {
 
 const navLinks = [
   { label: "GlassNav", href: "#glassnav" },
+  { label: "GlassMuteButton", href: "#glassmutebutton" },
   { label: "GlassCard", href: "#glasscard" },
   { label: "GitHub", href: "https://github.com/conniexu444/glass-components" },
 ]
